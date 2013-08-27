@@ -1584,6 +1584,78 @@ try{
   }
 }catch(e){ gclh_error("Show Smilies & BBCode",e); }
 
+// Save log als FieldNote
+try{
+  if(document.location.href.match(/^http:\/\/www\.geocaching\.com\/seek\/log\.aspx\?(id|guid|ID|wp|LUID|PLogGuid)\=/) {
+    function DBId2GC(gcId)
+    {
+        var gcCode = "";
+        var sequence = "0123456789ABCDEFGHJKMNPQRTVWXYZ";
+        
+        var base = 31;	
+
+        var rest = 0; 		
+        var divResult=gcId+411120;
+        
+        do
+        {
+            rest=divResult%base;
+            divResult=Math.floor(divResult/ base);		
+            gcCode=sequence.charAt(rest)+gcCode;
+        }while(divResult!=0);
+        
+        
+        if ((gcCode.length < 4) || (gcCode.length == 4 && sequence.indexOf(gcCode.charAt(0)) < 16)) {
+
+            base=16;		
+            rest = 0; 		
+            divResult=gcId;
+            gcCode="";
+            
+            do
+            {
+                rest=divResult%base;
+                divResult=Math.floor(divResult/ base);		
+                gcCode=sequence.charAt(rest)+gcCode;
+            
+                }while(divResult!=0);
+        }
+        
+        return "GC"+gcCode;
+    }
+      
+    $('<input name="ctl00$ContentBody$LogBookPanel1$btnSubmitLog" value="Save as fieldnote" id="gclhSaveFieldNote" class="Button">').insertAfter("#ctl00_ContentBody_LogBookPanel1_btnSubmitLog").click(function(){
+        var boundary = "---------------------------";
+        var xhr = new XMLHttpRequest();
+        var logDate=$.datepicker.parseDate("m/d/yy", $('#uxDateVisited')[0].value);
+        var logType=$($('#ctl00_ContentBody_LogBookPanel1_ddLogType')[0].selectedOptions[0]).text();
+     
+        var body = '--' + boundary + '\r\n'                 
+                 + 'Content-Disposition: form-data; name="file";'
+                 + 'filename="geocache_visits.txt"\r\n'
+                 + 'Content-type: plain/text\r\n\r\n'
+                 + DBId2GC(document.URL.match(/ID=([0-9]+)/)[1])+','
+                 + logDate.getFullYear()+'-'+logDate.getMonth()+'-'+logDate.getDay()+'T'+Date().match(/([0-9]+:[0-9]+):/)[1]+'Z,'
+                 + logType+','
+                 + '"'+$('#ctl00_ContentBody_LogBookPanel1_uxLogInfo').text()+'"'
+                 + '\r\n'
+                 + boundary + '--';
+
+        xhr.open("POST", "http://www.geocaching.com/my/uploadfieldnotes.aspx", true);
+        xhr.setRequestHeader(
+            "Content-type", "multipart/form-data; boundary="+boundary
+
+        );
+        xhr.onreadystatechange = function (){
+            if (xhr.readyState == 4 && xhr.status == 200){
+                alert("Your log was saved as fieldnote.");
+            }
+        }
+        xhr.send(body);
+    });
+  }
+}catch(e){ gclh_error("Save log as fieldnote",e); }
+
 // Show BBCode in Listing-Editor
 try{
   if(document.location.href.match(/^http:\/\/www\.geocaching\.com\/hide\/report\.aspx/) && document.getElementById("chkIsHtml") && !document.getElementById("chkIsHtml").checked){
