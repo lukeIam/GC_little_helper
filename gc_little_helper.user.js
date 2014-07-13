@@ -2821,7 +2821,7 @@ try{
           var opacity = settings_homezone_opacity/100;
           var opacity2 = opacity+0.1;
             
-          var latlng = new unsafeWindow.L.LatLng((home_lat/10000000), (home_lng/10000000));
+          var latlng = cloneInto(new unsafeWindow.L.LatLng((home_lat/10000000), (home_lng/10000000)), unsafeWindow);
 	      var options = {
 	                     color:       settings_homezone_color,
 	                     weight:       1,
@@ -2829,7 +2829,7 @@ try{
 	                     fillOpacity: opacity,
 	                     clickable:   false
 	                    };
-	      var circle = new unsafeWindow.L.Circle(latlng, settings_homezone_radius*1000,options);
+	      var circle = cloneInto(new unsafeWindow.L.Circle(latlng, settings_homezone_radius*1000,options), unsafeWindow);
 	      unsafeWindow.MapSettings.Map.addLayer(circle);
       }
       
@@ -4582,7 +4582,8 @@ try{
         unsafeWindow.currentPageIdx = 2;
         unsafeWindow.totalPages = 1;
         unsafeWindow.isBusy = true;
-        unsafeWindow.initalLogs = initalLogs = {"status":"success", "data": [], "pageInfo": { "idx":2, "size": 0, "totalRows": 1, "totalPages": 1, "rows": 1 } };        
+        initalLogs = {"status":"success", "data": [], "pageInfo": { "idx":2, "size": 0, "totalRows": 1, "totalPages": 1, "rows": 1 } };        
+        unsafeWindow.initalLogs = cloneInto(initialLogs, unsafeWindow);
     }
     
     /*// get userF
