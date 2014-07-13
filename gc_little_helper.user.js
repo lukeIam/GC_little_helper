@@ -4583,7 +4583,7 @@ try{
         unsafeWindow.totalPages = 1;
         unsafeWindow.isBusy = true;
         initalLogs = {"status":"success", "data": [], "pageInfo": { "idx":2, "size": 0, "totalRows": 1, "totalPages": 1, "rows": 1 } };        
-        unsafeWindow.initalLogs = cloneInto(initialLogs, unsafeWindow);
+        unsafeWindow.initalLogs = cloneInto(initalLogs, unsafeWindow);
     }
     
     /*// get userF
