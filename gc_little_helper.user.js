@@ -256,6 +256,11 @@ if(typeof(opera) != "undefined"){
   browser = "opera";
 }
 
+    
+if(browser == "firefox"){
+    var ff_Unsafe = createObjectIn(unsafeWindow, {defineAs: "gclh"});  
+}
+
 // Check for Scriptish bug in Fennec browser (http://www.geoclub.de/viewtopic.php?f=117&t=62130&p=983614#p983614)
 this.GM_setValue("browser", browser);
 var test_browser = this.GM_getValue("browser");
@@ -1137,12 +1142,13 @@ try{
   if(settings_fixed_pq_header && document.location.href.match(/^https?:\/\/www\.geocaching\.com\/pocket/) && document.getElementById("pqRepeater")){
     //scrolify based on http://stackoverflow.com/questions/673153/html-table-with-fixed-headers
     function scrolify(tblAsJQueryObject, height){
-        var oTbl = tblAsJQueryObject;
+        var oTbl = window.$(tblAsJQueryObject);
 
         // for very large tables you can remove the four lines below
         // and wrap the table with <div> in the mark-up and assign
         // height and overflow property  
-        var oTblDiv = unsafeWindow.$("<div/>");
+        
+        var oTblDiv = window.$("<div/>");
         oTblDiv.css('height', height);
         oTblDiv.css('overflow-y','auto');
         oTblDiv.css("margin-bottom",oTbl.css("margin-bottom"));
@@ -1152,10 +1158,10 @@ try{
         // save original width
         oTbl.attr("data-item-original-width", oTbl.width());
         oTbl.find('thead tr td').each(function(){
-            unsafeWindow.$(this).attr("data-item-original-width",unsafeWindow.$(this).width());
+            window.$(this).attr("data-item-original-width",(unsafeWindow||window).$(this).width());
         }); 
         oTbl.find('tbody tr:eq(0) td').each(function(){
-            unsafeWindow.$(this).attr("data-item-original-width",unsafeWindow.$(this).width());
+            window.$(this).attr("data-item-original-width",(unsafeWindow||window).$(this).width());
         });                 
 
 
@@ -1173,16 +1179,24 @@ try{
         // replace ORIGINAL COLUMN width                
         newTbl.width(newTbl.attr('data-item-original-width'));
         newTbl.find('thead tr td').each(function(){
-            unsafeWindow.$(this).width(unsafeWindow.$(this).attr("data-item-original-width"));
+           window.$(this).width(window.$(this).attr("data-item-original-width"));
         });     
         oTbl.width(oTbl.attr('data-item-original-width'));      
         oTbl.find('tbody tr:eq(0) td').each(function(){
-            unsafeWindow.$(this).width(unsafeWindow.$(this).attr("data-item-original-width"));
+            window.$(this).width(window.$(this).attr("data-item-original-width"));
         });                 
     }
     
-    scrolify(unsafeWindow.$('#pqRepeater'), 300);
-    unsafeWindow.$('#ActivePQs').css("padding-right","0px");
+	if(browser == "firefox"){
+	    exportFunction(scrolify, ff_Unsafe, {defineAs: "scrolify"});	      
+	    unsafeWindow.gclh.scrolify(unsafeWindow.$('#pqRepeater'), 300);
+	    
+	}
+	else{
+		scrolify(unsafeWindow.$('#pqRepeater'), 300);    	
+	}
+
+	unsafeWindow.$('#ActivePQs').css("padding-right","0px");
   }
 }catch(e){ gclh_error("Fixed header for PocketQuery",e); }
 
