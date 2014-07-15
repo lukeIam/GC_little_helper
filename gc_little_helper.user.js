@@ -256,11 +256,6 @@ if(typeof(opera) != "undefined"){
   browser = "opera";
 }
 
-    
-if(browser == "firefox"){
-    var ff_Unsafe = createObjectIn(unsafeWindow, {defineAs: "gclh"});  
-}
-
 // Check for Scriptish bug in Fennec browser (http://www.geoclub.de/viewtopic.php?f=117&t=62130&p=983614#p983614)
 this.GM_setValue("browser", browser);
 var test_browser = this.GM_getValue("browser");
@@ -1188,9 +1183,8 @@ try{
     }
     
 	if(browser == "firefox"){
-	    exportFunction(scrolify, ff_Unsafe, {defineAs: "scrolify"});	      
-	    unsafeWindow.gclh.scrolify(unsafeWindow.$('#pqRepeater'), 300);
-	    
+	    exportFunction(scrolify, unsafeWindow, {defineAs: "scrolify"});	      
+	    unsafeWindow.scrolify(unsafeWindow.$('#pqRepeater'), 300);	  
 	}
 	else{
 		scrolify(unsafeWindow.$('#pqRepeater'), 300);    	
