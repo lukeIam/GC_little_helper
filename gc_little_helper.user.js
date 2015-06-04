@@ -1161,7 +1161,7 @@ var mainGC = function () {
 				var head = document.getElementsByTagName('head')[0];
 				var style = document.createElement('style');
 				style.type = 'text/css';
-				style.innerHTML = ".Menu li a, .Menu li a:link, .Menu li a:visited { color: #93b516 !important; } ul.Menu>li>a:hover,ul.Menu>li>a:focus { color: #FFFFFF !important;} .logged-in-user>li a {display: inline-block;}";
+				style.innerHTML = ".li-user {z-index: 101;} .Menu li a, .Menu li a:link, .Menu li a:visited { color: #93b516 !important; } ul.Menu>li>a:hover,ul.Menu>li>a:focus { color: #FFFFFF !important;} .logged-in-user>li a {display: inline-block;}";
 				head.appendChild(style);				
 				
 				$('#ctl00_A1').css("visibility", "visible").css("padding-top", "18px").find("img").attr("src","https://www.geocaching.com/images/tlnmasters/geocaching-logo.png");			
