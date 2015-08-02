@@ -527,10 +527,11 @@ var start = function (c) {
 var mainGMaps = function () {
     if (settings_show_google_maps) {
         var gear = document.getElementById("gear");
+        var searchbox = document.getElementsByClassName("searchbutton")[0];
         // Neues google maps
-        if (gear) {
+        if (gear || searchbox) {
             function add_gclh_to_gear() {
-                if (gear.childNodes[0]) {
+                if (searchbox || (gear && gear.childNodes[0])) {
                     var script = "function open_gc(){";
                     script += "  var matches = document.location.href.match(/\\@(-?[0-9.]*),(-?[0-9.]*),([0-9]*)z/);";
                     script += "  if(matches != null){";
@@ -542,13 +543,20 @@ var mainGMaps = function () {
                     var script_ = document.createElement("script");
                     script_.innerHTML = script;
 
-                    var button = document.createElement("button");
-                    button.setAttribute("class", "widget-gear-settings-icon");
-                    button.style.backgroundImage = "url('" + http + "://www.geocaching.com/images/about/logos/geocaching/Logo_Geocaching_color_notext_32.png')";
+                    var button = document.createElement("button");  
                     button.setAttribute("onClick", "open_gc();");
 
-                    gear.childNodes[0].appendChild(script_);
-                    gear.childNodes[0].appendChild(button);
+                    if(gear){
+						button.setAttribute("class", "widget-gear-settings-icon");
+						button.style.backgroundImage = "url('" + http + "://www.geocaching.com/images/about/logos/geocaching/Logo_Geocaching_color_notext_32.png')";
+						gear.children[0].appendChild(script_);
+						gear.children[0].appendChild(button);
+					}
+					else{
+						button.style.cssText = "background-repeat: no-repeat; left: 480px; cursor: pointer; position: absolute;text-align: center; top: 0; margin-left: 0; vertical-align: top;  width: 32px; height: 32px; background-image: url('" + http + "://www.geocaching.com/images/about/logos/geocaching/Logo_Geocaching_color_notext_32.png')";
+						searchbox.parentNode.insertBefore(script_, searchbox.nextSibling);						
+						searchbox.parentNode.insertBefore(button, searchbox.nextSibling);						
+					}
                 } else setTimeout(add_gclh_to_gear, 1000); // The Gear-Box is filled after loading the page. Keep looking at it every 1 second
             }
 
